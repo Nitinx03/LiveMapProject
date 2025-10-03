@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import MapComponent from '../components/Map';
 import FilterPanel from '../components/FilterPanel';
 import styles from '../styles/Map.module.css';
+import dynamic from 'next/dynamic';
+
+// Dynamic import สำหรับ MapComponent
+const MapComponent = dynamic(() => import('../components/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="text-lg">Loading map...</div>
+    </div>
+  )
+});
 
 export default function MapPage() {
   const [posts, setPosts] = useState([]);
@@ -15,9 +25,17 @@ export default function MapPage() {
   });
   const [userLocation, setUserLocation] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    // ตั้งค่า client-side
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     // ตรวจสอบการล็อกอิน
     const user = localStorage.getItem('user');
     if (!user) {
@@ -44,7 +62,7 @@ export default function MapPage() {
 
     // โหลดโพสต์จากฐานข้อมูล (จำลองข้อมูล)
     loadPosts();
-  }, [router]);
+  }, [isClient, router]);
 
   const loadPosts = () => {
     // จำลองข้อมูลโพสต์ในมหาวิทยาลัยแม่โจ้
@@ -107,18 +125,29 @@ export default function MapPage() {
     console.log('Post clicked:', post);
   };
 
+  // ถ้ายังไม่เป็น client-side ให้แสดง loading
+  if (!isClient) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-lg">Loading...</div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className={styles.pageContainer}>
         <div className={styles.mapWrapper}>
-          <MapComponent 
-            posts={filteredPosts} 
+          <MapComponent
+            posts={filteredPosts}
             userLocation={userLocation}
             onPostClick={handlePostClick}
           />
         </div>
-        
-        <FilterPanel 
+
+        <FilterPanel
           filters={filters}
           setFilters={setFilters}
         />
