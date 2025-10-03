@@ -1,6 +1,6 @@
 import styles from '../styles/PostCard.module.css';
 
-export default function PostCard({ post }) {
+export default function PostCard({ post, isSingle = false }) {
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString('th-TH', {
       year: 'numeric',
@@ -32,7 +32,7 @@ export default function PostCard({ post }) {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${isSingle ? styles.singleCard : ''}`}>
       <div className={styles.header}>
         <div className={styles.type}>
           <span className={styles.typeIcon}>{getTypeIcon(post.type)}</span>
@@ -61,6 +61,12 @@ export default function PostCard({ post }) {
           <span>💬 {post.comments || 0}</span>
         </div>
       </div>
+
+      {isSingle && post.location && (
+        <div className={styles.locationInfo}>
+          <strong>ตำแหน่ง:</strong> ละติจูด: {post.location.lat.toFixed(6)}, ลองจิจูด: {post.location.lng.toFixed(6)}
+        </div>
+      )}
     </div>
   );
 }

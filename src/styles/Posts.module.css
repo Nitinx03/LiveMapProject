@@ -35,3 +35,29 @@
 .createPostButton:hover {
   background: #5a6fd8;
 }
+
+.singlePostHeader {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.backButton {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.backButton:hover {
+  background: #5a6268;
+}
+
+.singlePostContainer {
+  max-width: 600px;
+  margin: 0 auto;
+}

@@ -61,27 +61,39 @@ export default function CreatePostPage() {
     setIsSubmitting(true);
 
     try {
-      // ในโปรเจคจริงจะส่งข้อมูลไปยังเซิร์ฟเวอร์
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('content', content);
-      formData.append('type', postType);
-      formData.append('location', JSON.stringify(userLocation));
-      if (image) {
-        formData.append('image', image);
-      }
-
-      // จำลองการส่งข้อมูล
-      console.log('Creating post:', {
+      // อ่านข้อมูลผู้ใช้
+      const userData = JSON.parse(localStorage.getItem('user'));
+      
+      // สร้างโพสต์ใหม่
+      const newPost = {
+        id: Date.now(), // ใช้ timestamp เป็น ID
         title,
         content,
-        postType,
+        type: postType,
         location: userLocation,
-        image: image ? image.name : 'No image'
-      });
+        author: userData.name || userData.username || 'ผู้ใช้',
+        timestamp: new Date(),
+        image: imagePreview,
+        likes: 0,
+        comments: 0
+      };
 
-      // รอสักครู่เพื่อจำลองการส่งข้อมูล
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // อ่านโพสต์ที่มีอยู่จาก localStorage
+      const existingPosts = localStorage.getItem('maejo-posts');
+      let posts = [];
+      
+      if (existingPosts) {
+        posts = JSON.parse(existingPosts);
+      }
+      
+      // เพิ่มโพสต์ใหม่
+      posts.unshift(newPost); // เพิ่มที่ต้น array เพื่อแสดงโพสต์ล่าสุดก่อน
+      
+      // บันทึกลง localStorage
+      localStorage.setItem('maejo-posts', JSON.stringify(posts));
+
+      // รอสักครู่เพื่อให้เห็น loading
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // หลังจากสร้างโพสต์สำเร็จ กลับไปยังหน้าแผนที่
       router.push('/map');
