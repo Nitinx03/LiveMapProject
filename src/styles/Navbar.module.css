@@ -1,0 +1,45 @@
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.navItems {
+  display: flex;
+  justify-content: space-around;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.navItem:hover {
+  background: #f8f9fa;
+}
+
+.navItem.active {
+  color: #667eea;
+}
+
+.icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+}
